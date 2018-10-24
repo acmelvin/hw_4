@@ -1,0 +1,12 @@
+---
+title: "hw_4_rmd"
+author: "Alyssa Melvin"
+date: "October 24, 2018"
+output: word_document
+---
+
+```{r}
+
+list.files("../data")
+
+```

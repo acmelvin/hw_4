@@ -17,11 +17,12 @@ homicides <- homicides %>%
 
 unsolved <- homicides %>% 
   filter(disposition %in% c("Closed without arrest", "Open/No arrest")) %>% 
-  mutate(disposition = disposition %in% c("Closed without arrest", 
-                                          "Open/No arrest")) %>% 
-  group_by(city_name, add = TRUE) %>% 
-  count(disposition)
- 
+  group_by(city_name) %>% 
+  count() %>% 
+  rename (n_unsolved = "n")
+
+
+
   
 
 ```

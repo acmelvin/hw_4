@@ -6,7 +6,18 @@ output: word_document
 ---
 
 ```{r}
+library(readr)
+library(dplyr)
+library(tidyr)
 
-list.files("../data")
+homicides <- read_csv("../data/homicide-data.csv") 
+
+homicides <- homicides %>% 
+  unite(city_name, "city", "state", sep = ", " )
+
+unsolved <- homicides %>% 
+  group_by(city_name) %>% 
+  mutate(no_arrest %in% c("Closed without arrest", "Open/No arrest"))
+  count(disposition)
 
 ```

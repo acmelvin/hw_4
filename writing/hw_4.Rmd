@@ -21,7 +21,12 @@ unsolved <- homicides %>%
   count() %>% 
   rename (n_unsolved = "n")
 
+n_homicides <- homicides %>% 
+  group_by(city_name) %>% 
+  count() %>% 
+  rename (n_homicides = "n")
 
+ 
 
   
 

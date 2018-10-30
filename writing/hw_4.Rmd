@@ -49,7 +49,9 @@ prop_by_city <- function(city){
 
 albuquerque <- prop_by_city("Albuquerque, NM")
 atlanta <- prop_by_city("Atlanta, GA")
-baltimore <- prop_by_city("Baltimore, MD")
+baltimore <- prop_by_city("Baltimore, MD") %>% 
+  tidy() %>% 
+  select(c("estimate", "conf.low", "conf.high"))
 baton <- prop_by_city("Baton Rouge, LA")
 birm <- prop_by_city("Birmingham, AL")
 boston <- prop_by_city("Boston, MA")
@@ -107,7 +109,7 @@ city_prop_list <- c(albuquerque, atlanta, baltimore, baton, birm,
                     phoenix, pitt, rich, sac, antonio, bern, diego, fran, 
                     sav, stl, stockton, tampa, tulsa, dc)
 
-purrr::map(.x = city_prop_list, .f = tidy())
+
 
 
 

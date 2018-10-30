@@ -9,7 +9,6 @@ output: word_document
 library(readr)
 library(dplyr)
 library(tidyr)
-library(broom)
 
 homicides <- read_csv("../data/homicide-data.csv") 
 
@@ -30,6 +29,9 @@ homicides <- homicides %>%
 
 prop_by_city <- function(city){
   
+  library(broom)
+  library(purrr)
+  
   city_unsolved <- unsolved %>% 
     filter(city_name == city)
   
@@ -37,12 +39,15 @@ prop_by_city <- function(city){
     filter(city_name == city)
   
   city <- prop.test(x = city_unsolved$n_homicides,
-                    n = city_total$n_homicides)
+                    n = city_total$n_homicides,
+                    conf.level = 0.95)
   
 tidy(city)
   
 }
 
+
+baltimore <- prop_by_city("Baltimore, MD")
 
 
 

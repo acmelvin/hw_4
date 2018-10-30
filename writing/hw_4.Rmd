@@ -9,6 +9,7 @@ output: word_document
 library(readr)
 library(dplyr)
 library(tidyr)
+library(broom)
 
 homicides <- read_csv("../data/homicide-data.csv") 
 
@@ -19,14 +20,33 @@ unsolved <- homicides %>%
   filter(disposition %in% c("Closed without arrest", "Open/No arrest")) %>% 
   group_by(city_name) %>% 
   count() %>% 
-  rename (n_unsolved = "n")
+  rename(n_homicides = "n")
 
-n_homicides <- homicides %>% 
+homicides <- homicides %>% 
   group_by(city_name) %>% 
   count() %>% 
-  rename (n_homicides = "n")
+  rename(n_homicides = "n")
 
- 
+
+prop_by_city <- function(city){
+  
+  city_unsolved <- unsolved %>% 
+    filter(city_name == city)
+  
+  city_total <- homicides %>% 
+    filter(city_name == city)
+  
+  city <- prop.test(x = city_unsolved$n_homicides,
+                    n = city_total$n_homicides)
+  
+tidy(city)
+  
+}
+
+
+
+
+
 
   
 

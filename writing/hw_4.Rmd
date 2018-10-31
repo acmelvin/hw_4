@@ -8,7 +8,8 @@ output: word_document
 ```{r}
 library(readr)
 library(dplyr)
-library(tidyr)
+library(tidyr) 
+library(purrr)
 
 homicides <- read_csv("../data/homicide-data.csv") 
 
@@ -21,98 +22,3 @@ unsolved <- homicides %>%
   count() %>% 
   rename(n_homicides = "n")
 
-homicides <- homicides %>% 
-  group_by(city_name) %>% 
-  count() %>% 
-  rename(n_homicides = "n")
-
-
-prop_by_city <- function(city){
-  
-  library(broom)
-  library(purrr)
-  
-  city_unsolved <- unsolved %>% 
-    filter(city_name == city)
-  
-  city_total <- homicides %>% 
-    filter(city_name == city)
-  
-  city <- prop.test(x = city_unsolved$n_homicides,
-                    n = city_total$n_homicides,
-                    conf.level = 0.95)
-  
-#tidy(city)
-  
-}
-
-
-albuquerque <- prop_by_city("Albuquerque, NM")
-atlanta <- prop_by_city("Atlanta, GA")
-baltimore <- prop_by_city("Baltimore, MD") %>% 
-  tidy() %>% 
-  select(c("estimate", "conf.low", "conf.high"))
-baton <- prop_by_city("Baton Rouge, LA")
-birm <- prop_by_city("Birmingham, AL")
-boston <- prop_by_city("Boston, MA")
-buffalo <- prop_by_city("Buffalo, NY")
-charlotte <- prop_by_city("Charlotte, NC")
-chicago <- prop_by_city("Chicago, IL")
-cinci <- prop_by_city("Cincinnati, OH")
-columbus <- prop_by_city("Columbus, OH")
-dallas <- prop_by_city("Dallas, TX")
-denver <- prop_by_city("Denver, CO")
-detroit <- prop_by_city("Detroit, MI")
-durham <- prop_by_city("Durham, NC")
-ftworth <- prop_by_city("Fort Worth, TX")
-fresno <- prop_by_city("Fresno, CA")
-houston <- prop_by_city("Houston, TX")
-indianapolis <- prop_by_city("Indianapolis, IN")
-jacksonville <- prop_by_city("Jacksonville, FL")
-kansas <- prop_by_city("Kansas City, MO")
-vegas <- prop_by_city("Las Vegas, NV")
-longb <- prop_by_city("Long Beach, CA")
-la <- prop_by_city("Los Angeles, CA")
-louisville <- prop_by_city("Louisville, KY")
-memphis <- prop_by_city("Memphis, TN")
-miami <- prop_by_city("Miami, FL")
-milwaukee <- prop_by_city("Milwaukee, wI")
-minne <- prop_by_city("Minneapolis, MN")
-nash <- prop_by_city("Nashville, TN")
-newo <- prop_by_city("New Orleans, LA")
-nyc <- prop_by_city("New York, NY")
-oakland <- prop_by_city("Oakland, CA")
-okc <- prop_by_city("Oklahoma City, OK")
-omaha <- prop_by_city("Omaha, NE")
-philly <- prop_by_city("Philadelphia, PA")
-phoenix <- prop_by_city("Phoenix, AZ")
-pitt <- prop_by_city("Pittsburgh, PA")
-rich <- prop_by_city("Richmond, VA")
-sac <- prop_by_city("Sacramento, CA")
-antonio <- prop_by_city("San Antonio, TX")
-bern <- prop_by_city("San Bernardino, CA")
-diego <- prop_by_city("San Diego, CA")
-fran <- prop_by_city("San Francisco, CA")
-sav <- prop_by_city("Savannah, GA")
-stl <- prop_by_city("St. Louis, MO")
-stockton <- prop_by_city("Stockton, CA")
-tampa <- prop_by_city("Tampa, FL")
-tulsa <- prop_by_city("Tulsa, OK")
-dc <- prop_by_city("Washington, DC")
-
-city_prop_list <- c(albuquerque, atlanta, baltimore, baton, birm, 
-                    boston, buffalo,charlotte, chicago, cinci,
-                    columbus, dallas, denver, detroit, durham, ftworth, 
-                    fresno, houston, indianapolis, jacksonville, kansas, 
-                    vegas, longb, la, louisville, memphis, miami, milwaukee,
-                    minne, nash, newo, nyc, oakland, okc, omaha, philly, 
-                    phoenix, pitt, rich, sac, antonio, bern, diego, fran, 
-                    sav, stl, stockton, tampa, tulsa, dc)
-
-
-
-
-
-  
-
-```

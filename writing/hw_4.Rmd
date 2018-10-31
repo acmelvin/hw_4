@@ -11,11 +11,21 @@ library(dplyr)
 library(tidyr) 
 library(purrr)
 library(broom)
+library(ggplot2)
 
 homicides <- read_csv("../data/homicide-data.csv") 
 
 homicides <- homicides %>% 
   unite(city_name, "city", "state", sep = ", " )
+
+baltimore <- homicides %>% 
+  group_by(city_name) %>% 
+  filter(city_name == "Baltimore, MD") %>% 
+  mutate(unsolved = disposition %in% c("Closed without arrest", 
+                                       "Open/No arrest")) %>%
+  summarise(total = n(), unsolved = sum(unsolved))
+ 
+baltimore_prop_results <- prop.test(x = baltimore$unsolved, n = baltimore$total)
 
 unsolved <- homicides %>% 
   mutate(unsolved = disposition %in% c("Closed without arrest", 
@@ -25,7 +35,8 @@ unsolved <- homicides %>%
   summarise(N = n(), unsolved = sum(unsolved)) %>% 
   mutate(prop_results = map2(.x = unsolved, .y = N, .f = prop.test)) %>% 
   mutate(prop_results = map(.x = prop_results, .f = tidy)) %>% 
-  unnest(prop_results)
+  unnest(prop_results, .drop = TRUE)
+  
   
 
 

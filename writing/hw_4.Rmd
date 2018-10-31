@@ -35,8 +35,11 @@ unsolved <- homicides %>%
   summarise(N = n(), unsolved = sum(unsolved)) %>% 
   mutate(prop_results = map2(.x = unsolved, .y = N, .f = prop.test)) %>% 
   mutate(prop_results = map(.x = prop_results, .f = tidy)) %>% 
-  unnest(prop_results, .drop = TRUE)
-  
+  unnest(prop_results, .drop = TRUE)  %>% 
+  select(city_name, estimate, conf.low, conf.high) %>% 
+  mutate(estimate = 100*estimate,
+         conf.low = 100*conf.low,
+         conf.high = 100*conf.high) 
   
 
 

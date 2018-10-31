@@ -10,6 +10,7 @@ library(readr)
 library(dplyr)
 library(tidyr) 
 library(purrr)
+library(broom)
 
 homicides <- read_csv("../data/homicide-data.csv") 
 
@@ -21,7 +22,10 @@ unsolved <- homicides %>%
                                        "Open/No arrest")) %>% 
   select(city_name, unsolved) %>% 
   group_by(city_name) %>% 
-  summarise(N = n(), unsolved = sum(unsolved))
+  summarise(N = n(), unsolved = sum(unsolved)) %>% 
+  mutate(prop_results = map2(.x = unsolved, .y = N, .f = prop.test)) %>% 
+  mutate(prop_results = map(.x = prop_results, .f = tidy)) %>% 
+  unnest(prop_results)
   
 
 

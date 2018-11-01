@@ -12,6 +12,8 @@ library(tidyr)
 library(purrr)
 library(broom)
 library(ggplot2)
+library(forcats)
+library(scales)
 
 homicides <- read_csv("../data/homicide-data.csv") 
 
@@ -39,8 +41,24 @@ unsolved <- homicides %>%
   select(city_name, estimate, conf.low, conf.high) %>% 
   mutate(estimate = 100*estimate,
          conf.low = 100*conf.low,
-         conf.high = 100*conf.high) 
+         conf.high = 100*conf.high)
+```
+
+```{r, fig.height=8}
   
-
-
+  
+unsolved %>% 
+  mutate(city_name = fct_reorder(city_name, estimate, desc = TRUE)) %>% 
+  ggplot() +
+  geom_point(aes(x = city_name, y = estimate)) +
+  scale_y_continuous(labels = percent) +
+  ylim(20, 80) +
+  coord_flip() +
+  theme_dark() +
+  labs(x = "", y = "Percent of homicides that are unsolved") +
+  ggtitle("Unsolved homicides by city", subtitle = "Bars show 95% confidence interval")
+  
+  
+  
+#geom_errorbarh(aes(x = city_name, y = estimate, xmin = conf.low, xmax = conf.high, height = 0))
 ```

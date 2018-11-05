@@ -2,7 +2,7 @@
 title: "hw_4_rmd"
 author: "Alyssa Melvin"
 date: "October 24, 2018"
-output: word_document
+output: pdf_document
 ---
 
 ```{r}
@@ -32,6 +32,7 @@ baltimore_prop_results <- prop.test(x = baltimore$unsolved, n = baltimore$total)
 unsolved <- homicides %>% 
   mutate(unsolved = disposition %in% c("Closed without arrest", 
                                        "Open/No arrest")) %>% 
+  filter(city_name != "Tulsa, AL") %>% 
   select(city_name, unsolved) %>% 
   group_by(city_name) %>% 
   summarise(N = n(), unsolved = sum(unsolved)) %>% 

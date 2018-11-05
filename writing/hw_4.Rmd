@@ -35,30 +35,29 @@ unsolved <- homicides %>%
   select(city_name, unsolved) %>% 
   group_by(city_name) %>% 
   summarise(N = n(), unsolved = sum(unsolved)) %>% 
+  ungroup() %>% 
   mutate(prop_results = map2(.x = unsolved, .y = N, .f = prop.test)) %>% 
   mutate(prop_results = map(.x = prop_results, .f = tidy)) %>% 
   unnest(prop_results, .drop = TRUE)  %>% 
-  select(city_name, estimate, conf.low, conf.high) %>% 
-  mutate(estimate = 100*estimate,
-         conf.low = 100*conf.low,
-         conf.high = 100*conf.high)
+  select(city_name, estimate, conf.low, conf.high)
+
 ```
 
 ```{r, fig.height=8}
   
   
 unsolved %>% 
-  mutate(city_name = fct_reorder(city_name, estimate, desc = TRUE)) %>% 
   ggplot() +
-  geom_point(aes(x = city_name, y = estimate)) +
-  scale_y_continuous(labels = percent) +
-  ylim(20, 80) +
-  coord_flip() +
   theme_dark() +
-  labs(x = "", y = "Percent of homicides that are unsolved") +
+  geom_point(mapping = aes(x = estimate, y = reorder(city_name, estimate)), 
+             color = "white") +
+  geom_errorbarh(mapping = aes(x = estimate, y = city_name, 
+                               xmin = conf.low, xmax = conf.high), height = 0,
+                 color = "white") +
+  scale_x_continuous(labels = percent,
+                     limits = c(0.2, 0.8)) +
+  labs(y = "", x = "Percent of homicides that are unsolved") +
   ggtitle("Unsolved homicides by city", subtitle = "Bars show 95% confidence interval")
   
   
-  
-#geom_errorbarh(aes(x = city_name, y = estimate, xmin = conf.low, xmax = conf.high, height = 0))
 ```

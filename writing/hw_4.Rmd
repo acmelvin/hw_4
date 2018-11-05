@@ -2,10 +2,12 @@
 title: "hw_4_rmd"
 author: "Alyssa Melvin"
 date: "October 24, 2018"
-output: pdf_document
+output: 
+  pdf_document: default
 ---
 
 ```{r}
+library(rmarkdown)
 library(readr)
 library(dplyr)
 library(tidyr) 
@@ -41,6 +43,7 @@ unsolved <- homicides %>%
   mutate(prop_results = map(.x = prop_results, .f = tidy)) %>% 
   unnest(prop_results, .drop = TRUE)  %>% 
   select(city_name, estimate, conf.low, conf.high)
+
 
 ```
 
